@@ -16,7 +16,8 @@ This project production-ready blueprint demonstrating containerized application 
 - **Application:** Python, Flask, Prometheus Client Library
 - **Orchestration:** Docker, Docker Compose
 
-## Architecture Diagram& Directory Structure
+## Architecture Diagram
+
 <img width="1408" height="704" alt="diagram" src="https://github.com/user-attachments/assets/1d0ec266-f02a-40ec-b83e-c8a855d4fa43" />
 
 ## Dashboards
