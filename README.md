@@ -18,24 +18,8 @@ This project production-ready blueprint demonstrating containerized application 
 
 ## Architecture Diagram& Directory Structure
 
-prometheus-grafana-portfolio/
-├── README.md
-├── docker-compose.yml
-├── app/
-│ ├── Main.py
-│ └── Requirements.txt
-├── prometheus/
-│ └── prometheus.yml
-└── grafana/
-├── provisioning/
-│ ├── datasources/
-│ │ └── datasource.yml
-│ └── dashboards/
-│ └── dashboards.yml
-└── dashboards/
-└── app_dashboard.json
-
 ## Dashboards
+
 <img width="1563" height="499" alt="Dashboard" src="https://github.com/user-attachments/assets/d60bc50f-0b97-4947-a529-262adb00ac69" />
 <img width="1575" height="719" alt="generate_traffic3" src="https://github.com/user-attachments/assets/699812d1-ef6f-4770-9f9f-714f061f3676" />
 
