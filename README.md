@@ -52,8 +52,10 @@ This project provides a complete, containerized observability stack—featuring 
 
   ````bash
   while true; do curl -s http://localhost:5000 > /dev/null & done```
-
-  *Fault injection baseline traffic (HTTP 500 Internal Server Error simulation):*
-  ```bash
-  while true; do curl -s http://localhost:5000/error > /dev/null & done```
   ````
+
+_Fault injection baseline traffic (HTTP 500 Internal Server Error simulation):_
+
+````bash
+while true; do curl -s http://localhost:5000/error > /dev/null & done```
+````
