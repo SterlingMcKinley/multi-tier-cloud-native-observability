@@ -1,6 +1,6 @@
 # Cloud-Native Observability Stack (Prometheus & Grafana)
 
-This project production-ready blueprint demonstrating containerized application performance monitoring (APM) and infrastructure observability using Prometheus, Grafana, and Docker Compose.
+This project provides a complete, containerized observability stack—featuring Prometheus metrics, Grafana dashboards, and Docker Compose orchestration—to demonstrate modern APM and infrastructure monitoring practices.
 
 ## Features
 
