@@ -2,7 +2,7 @@
 
 This project provides a complete, containerized observability stack—featuring Prometheus metrics, Grafana dashboards, and Docker Compose orchestration—to demonstrate modern APM and infrastructure monitoring practices.
 
-## Features
+## This Project Features:
 
 - **Application Instrumentation:** A custom Python application instrumented to expose standard RED (Rate, Errors, Duration) metrics.
 - **Observability as Code:** Automated Grafana provisioning for data sources and dashboards—zero manual UI setup required upon deployment.
@@ -25,4 +25,35 @@ This project provides a complete, containerized observability stack—featuring 
 <img width="1563" height="499" alt="Dashboard" src="https://github.com/user-attachments/assets/d60bc50f-0b97-4947-a529-262adb00ac69" />
 <img width="1575" height="719" alt="generate_traffic3" src="https://github.com/user-attachments/assets/699812d1-ef6f-4770-9f9f-714f061f3676" />
 
-### Issues/Lessons Learned:
+### ## Issues / Lessons Learned
+
+### Configuration Drift: Docker-Compose Schema Compatibility
+
+- **Issue:** Initial deployment of the containerized Python application via `docker-compose` failed during the orchestration phase. The runtime daemon threw a compatibility regression error due to a mismatch between the engine's parser capabilities and the declared file schema version.
+
+  `ERROR: Version in "./docker-compose.yml" is unsupported. `
+
+- **Solution:** Two remediation paths were identified:
+  1. Demote the schema definition from `version: '3.8'` to `version: '3.3'` to match the legacy host environment.
+  2. Omit the `version` attribute entirely, allowing the modern Compose V2 specification to default to standard evaluation.
+     **Resolution:** Opted for backward compatibility by pinning the schema definition to version `3.3`.
+
+---
+
+### Observability Pipeline Validation: Synthetic Traffic Generation
+
+- **Issue:** In my local development environment, the lack of organic ingress traffic resulted in a data starvation issue on the Prometheus/Grafana observability stack, preventing the validation of alerting thresholds, SLIs, and dashboard visualizations.
+
+- **Solution:** Implemented concurrent synthetic load generation scripts to mock real-world user behavior, simulating both nominal operations and upstream service failures to populate metrics.
+
+  **Remediation Scripts:**
+
+  _High-throughput baseline traffic (HTTP 200 OK simulation):_
+
+  ````bash
+  while true; do curl -s http://localhost:5000 > /dev/null & done```
+
+  *Fault injection baseline traffic (HTTP 500 Internal Server Error simulation):*
+  ```bash
+  while true; do curl -s http://localhost:5000/error > /dev/null & done```
+  ````
