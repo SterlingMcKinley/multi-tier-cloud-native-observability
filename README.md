@@ -22,9 +22,7 @@ This project provides a complete, containerized observability stack—featuring 
 
 ## Steps:
 
-## Steps:
-
-- Developed a instrumented Python application that generates metrics.
+- Developed an instrumented Python application that generates metrics.
   - I made sure to define Prometheus metrics (Count, latency,)
   - Configured Prometheus & Node Exporter
 - Created YAML files to automate Grafana Provisioning.
@@ -36,7 +34,7 @@ This project provides a complete, containerized observability stack—featuring 
   - node-exporter — host-level metrics collector (image: prom/node-exporter:latest)
   - grafana — dashboards + visualization (image: grafana/grafana:latest)
   - Build, Run, & Design
-    1. Run docker-compose up --build -d
+    1. Run command: docker-compose up --build -d
     2. Generate some syntethic traffic by using http://localhost:5000/ and http://localhost:5000/error multiple times.
     3. Open Grafana UI at http://localhost:3000 (Login: admin / admin).
     4. Go to Dashboards -> Create Dashboard. Add panels using the PromQL metrics that I built:
