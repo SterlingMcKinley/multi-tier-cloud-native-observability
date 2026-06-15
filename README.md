@@ -33,15 +33,15 @@ This project provides a complete, containerized observability stack—featuring 
   - prometheus — metrics scraper (image: prom/prometheus:latest)
   - node-exporter — host-level metrics collector (image: prom/node-exporter:latest)
   - grafana — dashboards + visualization (image: grafana/grafana:latest)
-  - Build, Run, & Design
-    1. Run command: docker-compose up --build -d
-    2. Generate some syntethic traffic by using http://localhost:5000/ and http://localhost:5000/error multiple times.
-    3. Open Grafana UI at http://localhost:3000 (Login: admin / admin).
-    4. Go to Dashboards -> Create Dashboard. Add panels using the PromQL metrics that I built:
-    - Total Requests: sum(rate(app_requests_total[1m]))
-    - Error Rate (500s): sum(rate(app_requests_total{http_status="500"}[1m]))
-    - Latency (95th Percentile): histogram_quantile(0.95, sum(rate(app_request_latency_seconds_bucket[5m])) by (le))
-    5. Click the "Share" icon at the top of the dashboard -> Export -> Save as JSON. Saved this file to my local grafana/dashboards/app_dashboard.json folder so it version-controls perfectly.
+- Build, Run, & Design
+  1. Run command: docker-compose up --build -d
+  2. Generate some syntethic traffic by using http://localhost:5000/ and http://localhost:5000/error multiple times.
+  3. Open Grafana UI at http://localhost:3000 (Login: admin / admin).
+  4. Go to Dashboards -> Create Dashboard. Add panels using the PromQL metrics that I built:
+  - Total Requests: sum(rate(app_requests_total[1m]))
+  - Error Rate (500s): sum(rate(app_requests_total{http_status="500"}[1m]))
+  - Latency (95th Percentile): histogram_quantile(0.95, sum(rate(app_request_latency_seconds_bucket[5m])) by (le))
+  5. Click the "Share" icon at the top of the dashboard -> Export -> Save as JSON. Saved this file to my local grafana/dashboards/app_dashboard.json folder so it version-controls perfectly.
 
 ## Dashboards
 
