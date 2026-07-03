@@ -74,17 +74,18 @@ This project provides a complete, containerized observability stack—featuring 
 
   _*High-throughput baseline traffic (HTTP 200 OK simulation):*_
 
-  `````bash
-  while true; do curl -s http://localhost:5000 > /dev/null & done```
+  ```bash
+  while true; do curl -s http://localhost:5000 > /dev/null & done
 
 
   <img width="822" height="281" alt="successful_200" src="https://github.com/user-attachments/assets/59aa3933-e0ed-4dc8-bf68-282b14e73a54" /><br>
+  ```
 
-  *_Fault injection baseline traffic (HTTP 500 Internal Server Error simulation):_*
+_*Fault injection baseline traffic (HTTP 500 Internal Server Error simulation):*_
 
-  ````bash
-  while true; do curl -s http://localhost:5000/error > /dev/null & done```
+```bash
+while true; do curl -s http://localhost:5000/error > /dev/null & done
 
 
-  <img width="822" height="281" alt="error_500" src="https://github.com/user-attachments/assets/a25dd64d-b193-4f12-b811-f0632bbecefb" />
-  `````
+<img width="822" height="281" alt="error_500" src="https://github.com/user-attachments/assets/a25dd64d-b193-4f12-b811-f0632bbecefb" />
+```
