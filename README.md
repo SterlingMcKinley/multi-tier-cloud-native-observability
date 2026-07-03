@@ -23,19 +23,19 @@ This project provides a complete, containerized observability stack—featuring 
 ## Steps:
 
 - Developed an instrumented Python application that generates metrics.
-  - I made sure to define Prometheus metrics (Count, latency,)
+  - I made sure to define Prometheus metrics (Count, Latency)
   - Configured Prometheus & Node Exporter
 - Created YAML files to automate Grafana Provisioning.
   - [Observability As Code] Instead of manually clicking "Add Data Source" in Grafana, I used provisioning files so the project launches fully configured.
 - Orchestrate with Docker Compose
-  - The docker-comopse.yml file defines a complete observability stack including my own Python web app, all running together on a shared Docker network.
+  - The docker-compose.yml file defines a complete observability stack including my own Python web app, all running together on a shared Docker network.
   - web-app — Python application
   - prometheus — metrics scraper (image: prom/prometheus:latest)
   - node-exporter — host-level metrics collector (image: prom/node-exporter:latest)
   - grafana — dashboards + visualization (image: grafana/grafana:latest)
 - Build, Run, & Design
   1. Run command: docker-compose up --build -d
-  2. Generate some syntethic traffic by using http://localhost:5000/ and http://localhost:5000/error multiple times.
+  2. Generate some synthetic traffic by using http://localhost:5000/ and http://localhost:5000/error multiple times.
   3. Open Grafana UI at http://localhost:3000 (Login: admin / admin).
   4. Go to Dashboards -> Create Dashboard. Add panels using the PromQL metrics that I built:
   - Total Requests: sum(rate(app_requests_total[1m]))
@@ -48,7 +48,7 @@ This project provides a complete, containerized observability stack—featuring 
 <img width="1563" height="499" alt="Dashboard" src="https://github.com/user-attachments/assets/d60bc50f-0b97-4947-a529-262adb00ac69" />
 <img width="1575" height="719" alt="generate_traffic3" src="https://github.com/user-attachments/assets/699812d1-ef6f-4770-9f9f-714f061f3676" />
 
-### ## Issues / Lessons Learned
+## Issues / Lessons Learned
 
 ### Configuration Drift: Docker-Compose Schema Compatibility
 
@@ -59,7 +59,8 @@ This project provides a complete, containerized observability stack—featuring 
 - **Solution:** Two remediation paths were identified:
   1. Demote the schema definition from `version: '3.8'` to `version: '3.3'` to match the legacy host environment.
   2. Omit the `version` attribute entirely, allowing the modern Compose V2 specification to default to standard evaluation.
-     **Resolution:** Opted for backward compatibility by pinning the schema definition to version `3.3`.
+
+  **Solution:** Opted for backward compatibility by pinning the schema definition to version `3.3`.
 
 ---
 
@@ -71,18 +72,19 @@ This project provides a complete, containerized observability stack—featuring 
 
   **Remediation Scripts:**
 
-  _High-throughput baseline traffic (HTTP 200 OK simulation):_
+  _*High-throughput baseline traffic (HTTP 200 OK simulation):*_
 
-  ````bash
+  `````bash
   while true; do curl -s http://localhost:5000 > /dev/null & done```
-  ````
+
 
   <img width="822" height="281" alt="successful_200" src="https://github.com/user-attachments/assets/59aa3933-e0ed-4dc8-bf68-282b14e73a54" /><br>
 
-  _Fault injection baseline traffic (HTTP 500 Internal Server Error simulation):_
+  *_Fault injection baseline traffic (HTTP 500 Internal Server Error simulation):_*
 
   ````bash
   while true; do curl -s http://localhost:5000/error > /dev/null & done```
-  ````
+
 
   <img width="822" height="281" alt="error_500" src="https://github.com/user-attachments/assets/a25dd64d-b193-4f12-b811-f0632bbecefb" />
+  `````
