@@ -18,7 +18,7 @@ This project provides a complete, containerized observability stack—featuring 
 
 ## Architecture Diagram
 
-<img width="2528" height="1310" alt="diagram" src="https://github.com/user-attachments/assets/04a58aa5-8050-4752-a1e5-4f816eec578e"/>
+<img width="2528" height="1310" alt="diagram" src="https://github.com/user-attachments/assets/80ca589a-03ed-4935-9327-d7c12a7c4d4f"/>
 
 ## Steps:
 
