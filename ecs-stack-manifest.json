@@ -1,0 +1,70 @@
+{
+    "family": "observability-full-stack",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "2048",
+    "executionRoleArn": "arn:aws:iam::CHANGE_TO_YOUR_ACCOUNT_ID:role/ecsExecutionRoleForObsStack",
+    "containerDefinitions": [
+        {
+            "name": "web-app",
+            "image": "CHANGE_TO_YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/portfolio-observability/web-app:latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 5000,
+                    "hostPort": 5000,
+                    "protocol": "tcp"
+                }
+            ]
+        },
+        {
+            "name": "prometheus",
+            "image": "prom/prometheus:latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 9090,
+                    "hostPort": 9090,
+                    "protocol": "tcp"
+                }
+            ]
+        },
+        {
+            "name": "node-exporter",
+            "image": "prom/node-exporter:latest",
+            "essential": false,
+            "portMappings": [
+                {
+                    "containerPort": 9100,
+                    "hostPort": 9100,
+                    "protocol": "tcp"
+                }
+            ]
+        },
+        {
+            "name": "grafana",
+            "image": "grafana/grafana:latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "hostPort": 3000,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {
+                    "name": "GF_SECURITY_ADMIN_PASSWORD",
+                    "value": "admin"
+                },
+                {
+                    "name": "GF_SERVER_HTTP_ADDR",
+                    "value": "0.0.0.0"
+                }
+            ]
+        }
+    ]
+}
