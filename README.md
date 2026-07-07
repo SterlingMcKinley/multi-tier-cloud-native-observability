@@ -95,6 +95,15 @@ This script automates the full ECS deployment of the observability stack. It bui
 
 _PENDING_
 
+<img width="1905" height="1016" alt="aws_dashboard" src="https://github.com/user-attachments/assets/1eca8825-b27a-4543-b8f7-ed45833d011f" />
+
+
+<img width="1912" height="542" alt="aws_ecr" src="https://github.com/user-attachments/assets/be46bcac-21b9-41fa-8315-1e01ed6ace71" />
+
+
+<img width="1872" height="485" alt="aws_ecs" src="https://github.com/user-attachments/assets/9ec2578c-f904-469e-8dbb-d17a78d046e2" />
+
+
 ## Issues / Lessons Learned
 
 ### Configuration Drift: Docker-Compose Schema Compatibility
