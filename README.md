@@ -29,10 +29,11 @@ AWS ENVIRONMENT
 ## Architecture Diagram
 
 LOCAL ENVIRONMENT
-<img width="2528" height="1310" alt="diagram" src="https://github.com/user-attachments/assets/04a58aa5-8050-4752-a1e5-4f816eec578e"/>
+<img width="2000" height="910" alt="diagram" src="https://github.com/user-attachments/assets/04a58aa5-8050-4752-a1e5-4f816eec578e"/>
 
 AWS ENVIRONMENT
-_PENDING_
+
+<img width="2000" height="910" alt="aws_env_diagram" src="https://github.com/user-attachments/assets/85e3de8f-c9d5-45b1-b7c9-64cccef4067f" />
 
 ## Steps: (Local Environment)
 
