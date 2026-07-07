@@ -22,8 +22,8 @@ AWS ENVIRONMENT
 
 - **Monitoring:** Prometheus
 - **Visualization**: Grafana
-- **Application**: Web App (built into custom container)
-- **Orchestration**: Amazon ECS, AWS Fargate, Docker
+- **Application**: Python, Flask, Prometheus Client Library
+- **Orchestration**: Amazon ECS, AWS Fargate, ECR (Registry), Docker
 - **Networking & Security**: AWS VPC, Security Groups, AWS IAM
 
 ## Architecture Diagram
