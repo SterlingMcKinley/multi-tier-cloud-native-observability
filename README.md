@@ -5,9 +5,28 @@ This project provides a complete, containerized observability stack—featuring 
 ## This Project Features:
 
 - **Application Instrumentation:** A custom Python application instrumented to expose standard RED (Rate, Errors, Duration) metrics.
+
+Local: Runs inside a Docker container, exposing metrics via a local port for immediate scraper validation and debugging.
+
+AWS: Deployed as a scalable containerized service, with metrics collected across cloud instances to track distributed application health.
+
 - **Observability as Code:** Automated Grafana provisioning for data sources and dashboards—zero manual UI setup required upon deployment.
+
+Local: Grafana spins up instantly via Docker Compose, auto-loading data sources and dashboards directly from mapped local directories (/provisioning) for rapid iteration.
+
+AWS: Configurations are packaged and deployed into the cloud environment, ensuring that production dashboards boot up instantly with identical data mappings and zero manual drift.
+
 - **Infrastructure Monitoring:** Real-time host metrics captured via Prometheus Node Exporter.
+
+Local: Captures container host resource metrics (CPU, Memory, Disk, Network) directly from your local development machine.
+
+AWS: Monitors the underlying AWS cloud infrastructure and virtual machine resources, providing visibility into system-level health, resource constraints, and scaling triggers.
+
 - **Isolated Network Architecture:** Containerized microservices running on a dedicated bridge network to ensure secure, internal metrics scraping.
+
+Local: Uses a dedicated Docker Bridge Network to isolate telemetry traffic, allowing Prometheus to securely scrape the Python app and Node Exporter without exposing those endpoints to the public localhost ports.
+
+AWS: Implements isolated networking (such as custom VPC subnets and security groups), ensuring that metrics collection remains purely internal, secure, and separated from public-facing application traffic.
 
 ## Tech Stack
 
@@ -98,12 +117,9 @@ _PENDING_
 
 <img width="1905" height="1016" alt="aws_dashboard" src="https://github.com/user-attachments/assets/1eca8825-b27a-4543-b8f7-ed45833d011f" />
 
-
 <img width="1912" height="542" alt="aws_ecr" src="https://github.com/user-attachments/assets/be46bcac-21b9-41fa-8315-1e01ed6ace71" />
 
-
 <img width="1872" height="485" alt="aws_ecs" src="https://github.com/user-attachments/assets/9ec2578c-f904-469e-8dbb-d17a78d046e2" />
-
 
 ## Issues / Lessons Learned
 
