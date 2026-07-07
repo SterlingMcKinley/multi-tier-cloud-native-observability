@@ -11,16 +11,30 @@ This project provides a complete, containerized observability stack—featuring 
 
 ## Tech Stack
 
+LOCAL ENVIRONMENT
+
 - **Monitoring:** Prometheus, Node Exporter
 - **Visualization:** Grafana
 - **Application:** Python, Flask, Prometheus Client Library
 - **Orchestration:** Docker, Docker Compose
 
+AWS ENVIRONMENT
+
+- **Monitoring:** Prometheus
+- **Visualization**: Grafana
+- **Application**: Web App (built into custom container)
+- **Orchestration**: Amazon ECS, AWS Fargate, Docker
+- **Networking & Security**: AWS VPC, Security Groups, AWS IAM
+
 ## Architecture Diagram
 
+LOCAL ENVIRONMENT
 <img width="2528" height="1310" alt="diagram" src="https://github.com/user-attachments/assets/04a58aa5-8050-4752-a1e5-4f816eec578e"/>
 
-## Steps:
+AWS ENVIRONMENT
+_PENDING_
+
+## Steps: (Local Environment)
 
 - Developed an instrumented Python application that generates metrics.
   - I made sure to define Prometheus metrics (Count, Latency)
@@ -48,6 +62,39 @@ This project provides a complete, containerized observability stack—featuring 
 <img width="1563" height="499" alt="Dashboard" src="https://github.com/user-attachments/assets/d60bc50f-0b97-4947-a529-262adb00ac69" />
 <img width="1575" height="719" alt="generate_traffic3" src="https://github.com/user-attachments/assets/699812d1-ef6f-4770-9f9f-714f061f3676" />
 
+## ECS / ECR Deployment Steps (AWS Environment)
+
+Instead of executing manual AWS CLI commands for task registrations and service creations, the entire workflow was handled by a single orchestrator script. HEre are steps to deploy the local Obserability Stack to AWS environment.
+
+- 1. Run the Deployment Script:
+     Execute the automation script to build images, push to ECR, configure networking/security groups, and launch the service:
+
+```
+./scripts/deploy-ecs-stack.sh
+```
+
+This script automates the full ECS deployment of the observability stack. It builds and pushes the web app, Prometheus, and Grafana container images to ECR, creates the ECS execution role, registers a task definition, discovers networking details from the default VPC, opens the needed ports in the security group, and creates or updates an ECS service on Fargate so the stack runs in AWS.
+
+- 2. Verify the Deployment:
+     Monitor the script output as it automatically registers the ECS task definition, checks for the ECS execution role, and creates or updates the Fargate ECS service.
+
+- 3. Open Grafana UI at http://<PUBLIC_IP>:3000 (Login: admin / admin).
+
+- 4. Validate Dashboards:
+     Once the script confirms the ECS service is healthy, open Grafana UI at http://<PUBLIC_IP>:3000 (Login: admin / admin) (dynamically configured public URL) and verify that the Prometheus data source is connected.
+
+- 5. Create a dashboard and add panels using the following PromQL queries:
+     - Total Requests: sum(rate(app_requests_total[1m]))
+     - Error Rate (500s): sum(rate(app_requests_total{http_status="500"}[1m]))
+     - Latency (95th Percentile): histogram_quantile(0.95, sum(rate(app_request_latency_seconds_bucket[5m])) by (le))
+
+- 6. Traffic Generation:
+     Generate synthetic traffic by hitting the deployed Web App service endpoint to verify that live metrics are populating the Grafana dashboards.
+
+## Dashboards - AWS Production environment
+
+_PENDING_
+
 ## Issues / Lessons Learned
 
 ### Configuration Drift: Docker-Compose Schema Compatibility
@@ -74,13 +121,11 @@ This project provides a complete, containerized observability stack—featuring 
 
 _*High-throughput baseline traffic (HTTP 200 OK simulation):*_
 
-  ```bash
-  while true; do curl -s http://localhost:5000 > /dev/null & done
-  ```
+```bash
+while true; do curl -s http://localhost:5000 > /dev/null & done
+```
 
-
-  <img width="822" height="281" alt="successful_200" src="https://github.com/user-attachments/assets/59aa3933-e0ed-4dc8-bf68-282b14e73a54" /><br>
-  
+<img width="822" height="281" alt="successful_200" src="https://github.com/user-attachments/assets/59aa3933-e0ed-4dc8-bf68-282b14e73a54" /><br>
 
 _*Fault injection baseline traffic (HTTP 500 Internal Server Error simulation):*_
 
@@ -90,3 +135,28 @@ while true; do curl -s http://localhost:5000/error > /dev/null & done
 
 <img width="822" height="281" alt="error_500" src="https://github.com/user-attachments/assets/a25dd64d-b193-4f12-b811-f0632bbecefb" />
 
+---
+
+### Local Deployment vs AWS ECS Deployment: Configuration Compatibility
+
+- **Issue:** The local Docker Compose deployment worked because configuration files were mounted from the host environment and service discovery used container names such as `prometheus` and `grafana`. When moving to AWS ECS, those same assumptions no longer held, and the containers needed to be packaged with their own configuration and defined explicitly through ECS task and service definitions.
+
+- **Solution:** I adapted the stack for AWS by building custom Prometheus and Grafana images with the required provisioning files baked in, updating the datasource configuration to use ECS-friendly networking, and defining the deployment through ECS task and service definitions so the stack could run reliably on Fargate.
+
+---
+
+### Prometheus Port Exposure and Grafana Data Flow
+
+- **Issue:** When the services were moved to ECS, Prometheus was not exposed to the expected network path and Grafana could not reliably discover or scrape the application metrics endpoint. This caused the observability flow to break even though the containers were running.
+
+- **Solution:** I updated the deployment to explicitly allow ingress on the application and Prometheus ports, verified the container networking path, and ensured Grafana’s datasource configuration pointed to the correct ECS-accessible endpoint. I provisioned ingress routing infrastructure using the AWS CLI to authorize ingress TCP traffic on ports 5000 and 9090 from defined CIDR blocks (0.0.0.0/0 for initial validation), opening the perimeter gateway for metrics auditing and dashboard integration.
+
+---
+
+### Prometheus Metrics Not Found
+
+- **Issue:** During the initial dashboard setup, the query sum(rate(app_requests_total[1m])) returned no data (empty charts), or there was confusion regarding whether to use the application-specific metric versus the internal platform metric prometheus_http_requests_total.
+
+- **Solution PENDING** Issue still currently pending which is why a couple panels are blank. I am researching a solution. So far my research has discovered:
+  - 1- app_requests_total (Application Layer): This is a custom metric explicitly instrumented inside our Python Flask application source code to track real user/client traffic hitting endpoints like / and /error. Prometheus_http_requests_total (Platform/Control Plane Layer): This is a native, built-in metric generated automatically by the Prometheus server engine itself. It has zero awareness of the Python application.
+  - 2-that Prometheus metrics like rate() and histogram_quantile() require a continuous stream of data over time to calculate averages. I started the containers and haven't visited th application web pages yet, there is literally no data in the time window ([1m] or [5m]) to calculate. Because there are no data points, the math returns an empty set.
